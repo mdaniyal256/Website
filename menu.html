@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - Delicious Bites</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script>
+        // Function to add items to cart and update cart count
+        function addToCart(name) {
+            // Get current cart from localStorage or initialize an empty array
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            // Check if the item already exists in the cart
+            let existingItem = cart.find(item => item.name === name);
+            
+            if (existingItem) {
+                existingItem.quantity++; // Increase quantity if item already in cart
+            } else {
+                // Add a new item to the cart with quantity 1
+                cart.push({ name, price: getPrice(name), quantity: 1 });
+            }
+
+            // Save updated cart to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            // Update cart count
+            updateCartCount();
+            
+            // Show an alert with the added item
+            alert(name + " added to cart!");
+        }
+
+        // Function to retrieve price based on item name (simplified)
+        function getPrice(name) {
+            const prices = {
+                "Burger & Fries Combo": "$5.50",
+                "10 Pcs Nuggets & Fries": "$7.99",
+                "Grilled Steak": "$14.99",
+                "Sushi": "$12.99",
+                "Vanilla Ice Cream": "$4.99",
+                "Chocolate Cake": "$6.49",
+                "Cappuccino": "$3.99",
+                "Cold Drink": "$2.99"
+            };
+            return prices[name] || "$0.00";
+        }
+
+        // Function to update the cart count on the menu page
+        function updateCartCount() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById("cart-count").innerText = `(${totalItems})`;
+        }
+
+        // Run updateCartCount when the page loads to display the correct count
+        window.onload = updateCartCount;
+    </script>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Delicious Bites
+                <img src="logo.jpg" class="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="menu.html">Menu</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.html">Cart <span id="cart-count">0</span></a>
+                    </li>                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Menu Section with Tabs -->
+    <div class="container mt-5">
+        <h2 class="text-center">Our Delicious Menu</h2>
+
+        <ul class="nav nav-tabs" id="menuTabs">
+            <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#combo">Combo Deals</a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#main">Main Courses</a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#dessert">Desserts</a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#beverages">Beverages</a></li>
+        </ul>
+
+        <div class="tab-content mt-3">
+            <!-- Common Food Item Template -->
+            <script>
+                function createFoodItem(name, image, price ,description) {
+                    return `<div class="col-md-4">
+                        <div class="card">
+                            <img src="${image}" class="card-img-top" alt="${name}">
+                            <div class="card-body">
+                                <h5 class="card-title">${name}</h5>
+                                <p class="price">${price}</p>
+                                <p class="card-text">${description}</p>
+                                <button class="btn btn-success" onclick="addToCart('${name}')">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>`;
+                }
+            </script>
+
+            <div class="tab-pane fade show active" id="combo">
+                <div class="row" id="combo-items"></div>
+            </div>
+            <div class="tab-pane fade" id="main">
+                <div class="row" id="main-items"></div>
+            </div>
+            <div class="tab-pane fade" id="dessert">
+                <div class="row" id="dessert-items"></div>
+            </div>
+            <div class="tab-pane fade" id="beverages">
+                <div class="row" id="beverages-items"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("combo-items").innerHTML = 
+            createFoodItem("Burger & Fries Combo", "combo.jpg", "$5.50", "Juicy burger with crispy fries and a soft drink.") +
+            createFoodItem("10 Pcs Nuggets & Fries", "nuggetscombo.png", "$7.99", "Crispy golden nuggets served with fries.");
+
+        document.getElementById("main-items").innerHTML = 
+            createFoodItem("Grilled Steak", "Grilled-Steak.jpg", "$14.99", "Perfectly grilled steak with garlic butter and mashed potatoes.") +
+            createFoodItem("Sushi", "Sushi-Platter.jpeg", "$12.99", "A variety of fresh sushi rolls served with soy sauce.");
+
+        document.getElementById("dessert-items").innerHTML = 
+            createFoodItem("Vanilla Ice Cream", "Vanilla-Ice-Cream.jpeg", "$4.99", "Creamy vanilla ice cream topped with chocolate sauce.") +
+            createFoodItem("Chocolate Cake", "Chocolate-Cake.jpg", "$6.49", "Rich and moist chocolate cake with velvety frosting.");
+
+        document.getElementById("beverages-items").innerHTML = 
+            createFoodItem("Cappuccino", "cappuccino.jpg", "$3.99", "Freshly brewed espresso with steamed milk and frothy foam.") +
+            createFoodItem("Cold Drink", "CocaCola.jpeg", "$2.99", "Refreshing and chilled carbonated soft drink.");
+    </script>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; 2025 Delicious Bites. All Rights Reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

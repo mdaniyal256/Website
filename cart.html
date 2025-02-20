@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - Delicious Bites</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Delicious Bites
+                <img src="logo.jpg" class="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="menu.html">Menu</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.html">Cart<span id="cart-count">(0)</span></a>
+                    </li>                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Cart Section -->
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Your Cart</h2>
+        <div id="cart-items"></div>
+
+        <!-- Clear Cart Button -->
+        <div class="text-center mt-3">
+            <button class="btn btn-danger" onclick="clearCart()">Clear Cart</button>
+        </div>
+
+        <!-- Payment Section -->
+        <div class="mt-5">
+            <h3 class="text-center">Checkout</h3>
+            <p class="text-center" id="total-price"></p>
+            <form id="payment-form" onsubmit="handlePayment(event)" class="checkout-form">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="address" required>
+                </div>
+                <div class="mb-3">
+                    <label for="credit-card" class="form-label">Credit Card Number</label>
+                    <input type="text" class="form-control" id="credit-card" required>
+                </div>
+                <div class="mb-3">
+                    <label for="expiry-date" class="form-label">Expiry Date</label>
+                    <input type="text" class="form-control" id="expiry-date" required>
+                </div>
+                <div class="mb-3">
+                    <label for="cvv" class="form-label">CVV</label>
+                    <input type="text" class="form-control" id="cvv" required>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="checkout-btn">Pay Now</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Function to load and display cart items
+        function loadCart() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let cartItemsHTML = "";
+            let totalPrice = 0;
+
+            cart.forEach(item => {
+                cartItemsHTML += `
+                    <div class="cart-item">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h5>${item.name}</h5>
+                                <p>Price: ${item.price}</p>
+                                <p>Quantity: ${item.quantity}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p>Total: $${(parseFloat(item.price.replace('$', '')) * item.quantity).toFixed(2)}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                totalPrice += parseFloat(item.price.replace('$', '')) * item.quantity;
+            });
+
+            document.getElementById('cart-items').innerHTML = cartItemsHTML;
+            document.getElementById('cart-count').innerText = `(${cart.length})`;
+
+            // Display the total price
+            document.getElementById('total-price').innerText = `Total: $${totalPrice.toFixed(2)}`;
+        }
+
+        // Function to clear the cart
+        function clearCart() {
+            localStorage.removeItem('cart');
+            loadCart(); // Refresh cart
+        }
+
+        // Payment form submission handler
+        function handlePayment(event) {
+            event.preventDefault(); // Prevent form from submitting the normal way
+
+            // Get form values
+            let name = document.getElementById('name').value;
+            let address = document.getElementById('address').value;
+            let creditCard = document.getElementById('credit-card').value;
+            let expiryDate = document.getElementById('expiry-date').value;
+            let cvv = document.getElementById('cvv').value;
+
+            // Example of handling payment logic (just an alert for now)
+            alert(`Payment successful!\nName: ${name}\nAddress: ${address}\nCredit Card: ${creditCard}\nExpiry: ${expiryDate}\nCVV: ${cvv}`);
+
+            // Optionally, clear the cart after payment
+            clearCart();
+        }
+
+        // Load cart when page loads
+        window.onload = loadCart;
+    </script>
+
+    <footer>
+        <p>&copy; 2025 Delicious Bites. All Rights Reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
