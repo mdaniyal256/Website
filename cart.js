@@ -1,3 +1,4 @@
+<!--Self written-->
 document.addEventListener("DOMContentLoaded", function () {
     updateCartCount();
     displayCart();
