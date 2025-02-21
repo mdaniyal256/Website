@@ -1,3 +1,4 @@
+<!--Self written-->
 <script src="assets/js/script.js"></script>
 document.addEventListener("DOMContentLoaded", function () {
     let form = document.getElementById("contact-form");
